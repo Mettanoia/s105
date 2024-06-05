@@ -1,40 +1,40 @@
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
 import java.io.*;
 import java.util.List;
 import java.util.function.Function;
 
 public class Main {
-    public static void main(String[] args) {
+    public static <PropertiesConfiguration> void main(String[] args) {
+
+        // Read app.config.properties configuration file
+
+        Configurations configs = new Configurations();
+        PropertiesConfiguration config;
+        try {
+            config = (PropertiesConfiguration) configs.properties(new File("app.config.properties"));
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        }
 
 
         // Check all input arguments
 
-        String input = null;
-        try {
-            input = args[0];
-        } catch (IndexOutOfBoundsException ignored) {
-        }
-
-        String output = null;
-        try {
-            output = args[1];
-        } catch (IndexOutOfBoundsException ignored) {
-        }
-
-        String treeOrNot = null;
-        try {
-            treeOrNot = args[2];
-        } catch (IndexOutOfBoundsException ignored) {
-        }
-
+        String[] params = getParameters((org.apache.commons.configuration2.PropertiesConfiguration) config, args);
+        String input = params[0];
+        String output = params[1];
+        String treeOrNot = params[2];
 
         FileGateway gateway = new FileGatewayImpl();
 
         // We instantiate the proper interactor depending on the use case
 
         Function<String, Result<List<String>>> interactor =
-                (treeOrNot == null) ?
-                        new ListOrderedByNameInteractor(gateway::getAllFiles) :
-                        new GetFilesystemTreeInteractor();
+                (Boolean.parseBoolean(treeOrNot)) ?
+                        new GetFilesystemTreeInteractor() :
+                        new ListOrderedByNameInteractor(gateway::getAllFiles);
 
 
         // If the output mode is CONSOLE we print the output of the interactor
@@ -81,7 +81,34 @@ public class Main {
 
     }
 
-    private record Person(String name, int age) implements Serializable{
+    private static String[] getParameters(PropertiesConfiguration config, String[] args) {
+
+        String input = null;
+        try {
+            input = args[0];
+        } catch (IndexOutOfBoundsException ignored) {
+            input = config.getString("inputDir");
+        }
+
+        String output = null;
+        try {
+            output = args[1];
+        } catch (IndexOutOfBoundsException ignored) {
+            output = config.getString("outputDir");
+        }
+
+        String treeOrNot = null;
+        try {
+            treeOrNot = args[2];
+        } catch (IndexOutOfBoundsException ignored) {
+            treeOrNot = config.getString("isTree");
+        }
+
+        return new String[]{input, output, treeOrNot};
+
+    }
+
+    private record Person(String name, int age) implements Serializable {
     }
 
 }
