@@ -1,3 +1,7 @@
+package use_cases;
+
+import file_gateway.Result;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -7,7 +11,7 @@ import java.util.function.Function;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 
-final class GetFilesystemTreeInteractor implements Function<String, Result<List<String>>> {
+public final class GetFilesystemTreeInteractor implements Function<String, Result<List<String>>> {
 
     @Override
     public Result<List<String>> apply(String startingNode) {

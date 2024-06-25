@@ -1,3 +1,5 @@
+package file_gateway;
+
 import java.util.List;
 
 public interface FileGateway {

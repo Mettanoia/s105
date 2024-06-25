@@ -1,12 +1,16 @@
+package use_cases;
+
+import file_gateway.Result;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-final class ListOrderedByNameInteractor implements Function<String, Result<List<String>>> {
+public final class ListOrderedByNameInteractor implements Function<String, Result<List<String>>> {
 
     private final Function<String, List<String>> getAllFiles;
 
-    ListOrderedByNameInteractor(Function<String, List<String>> getAllFiles) {
+    public ListOrderedByNameInteractor(Function<String, List<String>> getAllFiles) {
         this.getAllFiles = getAllFiles;
     }
 

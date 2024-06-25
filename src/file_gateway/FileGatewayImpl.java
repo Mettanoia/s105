@@ -1,8 +1,10 @@
+package file_gateway;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
-final class FileGatewayImpl implements FileGateway {
+public final class FileGatewayImpl implements FileGateway {
 
     @Override
     public List<String> getAllFiles(String folderName) {
@@ -28,7 +30,7 @@ final class FileGatewayImpl implements FileGateway {
                 writer.write(line + "\n");
             }
         } catch (IOException e) {
-            return Result.failure(new RuntimeException(e.getMessage(), e));
+            return Result.failure(e);
         }
         return Result.success(true);
     }
